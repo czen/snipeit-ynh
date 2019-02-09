@@ -1,6 +1,5 @@
-SOURCE_URL=url of app's source
-SOURCE_SUM=sha256 checksum
+SOURCE_URL=https://github.com/snipe/snipe-it/archive/v4.6.8.tar.gz
+SOURCE_SUM=c31562ea116f6e75d2e618db70a89d8d7b39fe9031cfa63a7b68aa979ed673f1
 SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=tar.gz
 SOURCE_IN_SUBDIR=true
-SOURCE_FILENAME=

@@ -96,7 +96,10 @@ ynh_app_setting_set $app port $port
 ###		- As well as the section "REINSTALL DEPENDENCIES" in the restore script
 ###		- And the section "UPGRADE DEPENDENCIES" in the upgrade script
 
-ynh_install_app_dependencies deb1 deb2
+ynh_install_app_dependencies php-zip
+
+sudo curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
 
 #=================================================
 # CREATE A MYSQL DATABASE
@@ -126,6 +129,9 @@ ynh_mysql_setup_db $db_name $db_name
 ynh_app_setting_set $app final_path $final_path
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source "$final_path"
+
+cd $final_path
+sudo mv .env.example .env
 
 #=================================================
 # NGINX CONFIGURATION
