@@ -96,8 +96,8 @@ ynh_app_setting_set $app port $port
 
 ynh_install_app_dependencies php-zip
 
-sudo curl -sS https://getcomposer.org/installer | php
-sudo mv composer.phar /usr/local/bin/composer
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar /usr/local/bin/composer
 
 #=================================================
 # CREATE A MYSQL DATABASE
@@ -128,8 +128,8 @@ ynh_app_setting_set $app final_path $final_path
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source "$final_path"
 
-cd $final_path
-sudo mv .env.example .env
+# cd $final_path
+# mv .env.example .env
 
 #=================================================
 # NGINX CONFIGURATION
