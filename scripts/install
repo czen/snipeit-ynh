@@ -95,7 +95,14 @@ ynh_app_setting_set $app port $port
 ###		- As well as the section "REINSTALL DEPENDENCIES" in the restore script
 ###		- And the section "UPGRADE DEPENDENCIES" in the upgrade script
 
-ynh_install_app_dependencies php-zip
+# TODO:
+# * add "try_files $uri $uri/ /index.php$is_args$args;" to nginx top snipeit config after server_name clause
+
+# * correctly install php-bcmath, php-imagick, php-zip
+
+# what version of php are we installing for?
+# this did not install php-bcmath where globally installed composer with php7.0 would find it.
+ynh_install_app_dependencies php-zip php-bcmath php-imagick
 
 curl -sS https://getcomposer.org/installer | php
 mv composer.phar /usr/local/bin/composer
@@ -130,7 +137,7 @@ ynh_app_setting_set $app final_path $final_path
 ynh_setup_source "$final_path"
 
 # cd $final_path
-# mv .env.example .env
+sudo cp $final_path/.env.example $final_path/.env
 
 #=================================================
 # NGINX CONFIGURATION
@@ -147,6 +154,14 @@ ynh_add_nginx_config
 
 # Create a system user
 ynh_system_user_create $app
+
+#=================================================
+# SETUP WEB ROOT ACCESS RIGHTS
+#=================================================
+sudo chown -R $app:$app $final_path
+sudo chmod -R 755 $final_path/public/uploads
+sudo chmod -R 755 $final_path/storage
+sudo chmod 600 $final_path/.env
 
 #=================================================
 # PHP-FPM CONFIGURATION
@@ -226,6 +241,18 @@ fi
 ### `ynh_replace_string` is used to replace a string in a file.
 ### (It's compatible with sed regular expressions syntax)
 # ynh_replace_string "match_string" "replace_string" "$final_path/CONFIG_FILE"
+ynh_replace_string "APP_URL=null" "APP_URL=$domain" "$final_path/.env"
+ynh_replace_string "DB_DATABASE=null" "DB_DATABASE=$db_name" "$final_path/.env"
+ynh_replace_string "DB_PASSWORD=null" "DB_PASSWORD=$db_pwd" "$final_path/.env"
+ynh_replace_string "DB_USERNAME=null" "DB_USERNAME=$db_name" "$final_path/.env"
+ynh_replace_string "IMAGE_LIB=gd" "IMAGE_LIB=imagick" "$final_path/.env"
+
+
+#=================================================
+# INIT COMPOSER
+#=================================================
+init_composer $final_path
+(cd $final_path && sudo php artisan key:generate --no-interaction)
 
 #=================================================
 # STORE THE CONFIG FILE CHECKSUM

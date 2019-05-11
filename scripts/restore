@@ -46,6 +46,7 @@ test ! -d $final_path \
 # RESTORE THE NGINX CONFIGURATION
 #=================================================
 
+# TODO: restore try_files clause in ssl nginx config in conf.d/$domain.conf
 ynh_restore_file "/etc/nginx/conf.d/$domain.d/$app.conf"
 
 #=================================================
