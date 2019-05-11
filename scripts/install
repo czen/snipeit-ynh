@@ -252,7 +252,7 @@ ynh_replace_string "IMAGE_LIB=gd" "IMAGE_LIB=imagick" "$final_path/.env"
 # INIT COMPOSER
 #=================================================
 init_composer $final_path
-(cd $final_path && sudo php artisan key:generate --no-interaction)
+sudo cd $final_path && sudo php artisan key:generate --force
 
 #=================================================
 # STORE THE CONFIG FILE CHECKSUM
